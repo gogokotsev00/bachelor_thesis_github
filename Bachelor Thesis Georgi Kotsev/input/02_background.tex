@@ -8,17 +8,33 @@ DELETEME: Background represents underlying knowledge that is required to underst
 
 DELETEME: Related work represents results from work that handled the same or a similar problem that you are addressing. This work might have used a different approach or might not have been that successful. Finding a paper / work that solved your problem in the same way you were planning to do is not good and you should contact your supervisor for solving this issue. Again, each paper / work has to be connected to your approach: other papers might have not chosen an optimal solution; they might not have been taking care of essential aspects; they might have chosen a different approach and you believe, yours will work better ...
 
+This chapter introduces some important scientific fundamentals for better understanding of the problem's solution. Initially, \ref{camera_section} explains about the composition of a single digital pinhole camera and some of its characteristics. Then, \ref{camera_model} outlines the mathematical model for transforming a 3D object on the 2D image plane, after which the subsection \ref{instance_camera} informs about the functionality of the instance segmentation camera that CARLA offers. Finally, section \ref{carla_background} describes how the 3D autonomous driving simulator works and presents some of its features used in this work.
+
 %###################################################################################
 %###################### Topic A             ########################################
 %###################################################################################
-\section{Topic 1}
+\section{Camera}\label{camera_section}
+The digital camera is an instrument used for capturing light and creating images. On the figure \ref{fig:camera_construction} we could get an idea of how this technological invention is constructed. It uses an optic that consists of one or more lenses, through which the light rays are received. Afterwards, there is a sensor resembling the form of a solar panel, divided into red, green and blue pixels, which is hit by the collected light rays. As described from Schreer in \cite{camera_pinhole_model} the process of transforming the information from the captured light into a meaningful for the human eye representation is the following one: 
+\begin{itemize}
+    \item Light ray hits a sensor's pixel $\rightarrow$ The sensor converts it into an energy signal, which sends to the built-in computer $\rightarrow$ The computer estimates how dark or light the according pixel on the image plane should be and determines the correct colour value $\rightarrow$ As an output all pixels are combined in order to approximately recreate all details from the captured object  
+\end{itemize}
+ 
+\begin{figure}
+\centering
+\includesvg[width=0.6\textwidth]{images/camera_construction}
+\caption[Information Generality]{This image illustrates how a digital camera is constructed.\label{fig:camera_construction}}
+\end{figure}
+
+\subsection{Camera model}\label{camera_model}
+
+\subsection{Instance Segmentation Camera}\label{instance_camera}
 
 %###################################################################################
 %###################### Topic B             ########################################
 %###################################################################################
-\section{Topic 2}
+\section{CARLA - 3D autonomous driving simulator}\label{carla_background}
 
 %###################################################################################
 %###################### Topic C             ########################################
 %###################################################################################
-\section{Topic 3}
+\section{Related Work}
