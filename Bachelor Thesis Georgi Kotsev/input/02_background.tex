@@ -38,14 +38,37 @@ conditions, single cameras are unreliable when exposed to bad light and weather 
 \end{figure}
 
 \subsection{Camera model}\label{camera_model}
-In order to illustrate how the transformation from a 3D world coordinate point to a 2D sensor's coordinate system happens, we use the pinhole camera model from Schreer \cite{camera_pinhole_model}. Figure TO\_BE\_ADDED portrays how a point $P$ from a real world object in front of the camera is orthogonally projected on the image plane. We then get the point $C$ definded in the image plane's coordinate system as $(u,v)^{T}$
+In order to illustrate how the transformation from a 3D world coordinate point to a 2D sensor's coordinate system happens, we use the pinhole camera model from Schreer \cite{camera_pinhole_model}. Figure \ref{fig:camera_model} portrays how a point $M(X_{w}, Y_{w}, Z_{w})$ from a real world's object placed in front of the camera is orthogonally projected on the image plane. We then get the point $m$ defined in the image plane's coordinate system as $(u,v)^{T}$. As we can see, the projection center stays behind the image plane and its optical axis points in the Z-direction, therefore it intersects the image plane in the centre point $c$. When we want to define the location of a 3D world point on the image plane we have to use the camera's intrinsic matrix $A$, which contains parameter of the camera like the coordinates of the centre point $c(u_{0},v_{0})$ and the distance $\alpha = focal \: length / pixel \: size$, measured in pixels units. In the following equation we execute a matrix multiplication between the intrinsic matrix $A$ and a normalized 3x4 matrix $P_{N}$:
 
-\subsection{Instance Segmentation Camera}\label{instance_camera}
+\begin{equation}
+    P_{new} = A P_{N} = \begin{bmatrix}
+                        \alpha & 0 & u_{0}\\
+                        0 & \alpha & v_{0}\\
+                        0 & 0 & 1\end{bmatrix} \cdot \begin{bmatrix}
+                        1 & 0 & 0 & 0\\
+                        0 & 1 & 0 & 0\\
+                        0 & 0 & 1 & 0\end{bmatrix}
+\end{equation}
+
+As an output of the equation we receive the projection matrix $P_{new}$ and the last step is to transform the world coordinates of the point $M$ into the sensor's coordinate system. This is done by applying another multiplication the between a Euclidean homography matrix $H$ and the point $M$ coordinates, after which we can finally multiply the result with the projection matrix. The above-mentioned process is the following one:
+
+\begin{equation}
+m = P_{new} \cdot H \cdot M
+\end{equation}
+
+\begin{figure}
+\centering
+\includegraphics[width = \textwidth, height = 10cm]{images/camera_model_pic.png}
+\caption[Single camera's model]{Scheme of the pinhole model and a projection of a 3D object on a 2D image plane\label{fig:camera_model}}
+\end{figure}
 
 %###################################################################################
 %###################### Topic B             ########################################
 %###################################################################################
 \section{CARLA - 3D autonomous driving simulator}\label{carla_background}
+In this section we introduce the open-source 3D simulator CARLA which is built on Unreal Engine 4 with the main purpose of facilitating autonomous driving researches. The simulation platform provides a great number of open digital assets like buildings, vehicles, pedestrians, whole cities, etc. What is more, the simulator is constantly developed by different people, who contribute to a realistic digital environment and efficient conducting of experiments and tests. In addition to the aforementioned benefits, CARLA gives the opportunity to researchers to work with urban layouts without having to consider any logistical difficulties of training and testing systems in the physical world or infrastructure costs \cite{carla_paper}. 
+
+\subsection{Instance Segmentation Camera}\label{instance_camera}
 
 %###################################################################################
 %###################### Topic C             ########################################
