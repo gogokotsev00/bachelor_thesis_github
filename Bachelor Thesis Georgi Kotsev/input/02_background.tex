@@ -19,22 +19,24 @@ The digital camera is an instrument used for creating images through light captu
     \item Light ray hits a sensor's pixel $\rightarrow$ The sensor converts it into an energy signal, which sends to the built-in computer $\rightarrow$ The computer estimates how dark or light the according pixel on the image plane should be and determines the correct colour value $\rightarrow$ As an output all pixels are combined in order to approximately recreate all details from the captured object  
 \end{itemize}
 
-In order to display a more detailed version of the captured image, cameras need more pixels to collect light rays\footnote{\url{https://www.creativelive.com/photography-guides/how-does-a-camera-work}, visited on 18/11/2022}. Thus, modern cameras rely on a bigger number of pixels to enhance the quality of the photos, which also contributes to improving the resolution of the visual sensor. Cameras with greater resolution are important in the area of street surveillance because in case of accidents or an against-the-rules behaviour it facilitates the task of recognising the suspect. Moreover, when we take into account the fact that these sensors act as a visual world perception for the autonomous vehicles, the resolution plays an essential role in the efficient object detection \cite{resolution_importance}. 
-
-Another specification of cameras that this thesis considers is the so-called field of view (FoV), which determines the quantity of information that has been captured on the result image. It depends on the focal length of the lens and the sensor's size. On figure\footnote{\url{https://www.princetoninstruments.com/learn/camera-fundamentals/field-of-view-and-angular-field-of-view}, visited on 18/11/2022 \label{fov_figure}} \ref{fig:camera_fov} is shown what happens when the light goes through the lenses. In the upper case, due to a shorter focal length\footnote{The length between the lens and the focused image on the sensor} the lens converges the light stronger, therefore the focus is on the subject being imaged and the FoV is larger. In the vice-versa situation, the longer focal length allows for a focus on the image and thus provides a smaller FoV.
-
-The monocular cameras belong to the directional sensors, because they can perceive information only from the direction in which their optical part is adjusted. In contrast to LiDAR sensors, which has a 360$^{\circ}$ view of the environment around it and can not be affected by light
-conditions, single cameras are unreliable when exposed to bad light and weather conditions \cite{camera_vs_lidar}. As a main drawback of single cameras is regarded the lack of depth information, which impedes an accurate object recognition. Nevertheless, monocular cameras have advantages like lower integration price, much bigger availability on the market and the most important one is that they provide detailed pixel intensity information in form of a visual representation of the real world.
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{images/camera_construction.png}
 \caption[Digital camera's design]{This image illustrates simply the design of a digital camera, based on Schreer's book \cite{camera_pinhole_model} \label{fig:camera_construction}}
 \end{figure}
 
-\begin{figure}
+\newpage
+In order to display a more detailed version of the captured image, cameras need more pixels to collect light rays\footnote{\url{https://www.creativelive.com/photography-guides/how-does-a-camera-work}, visited on 18/11/2022}. Thus, modern cameras rely on a bigger number of pixels to enhance the quality of the photos, which also contributes to improving the resolution of the visual sensor. Cameras with greater resolution are important in the area of street surveillance because in case of accidents or an against-the-rules behaviour it facilitates the task of recognising the suspect. Moreover, when we take into account the fact that these sensors act as a visual world perception for the autonomous vehicles, the resolution plays an essential role in the efficient object detection \cite{resolution_importance}. 
+
+Another specification of cameras that this thesis considers is the so-called field of view (FoV), which determines the quantity of information that has been captured on the result image. It depends on the focal length of the lens and the sensor's size. On figure \ref{fig:camera_fov} is shown what happens when the light goes through the lenses. In the upper case, due to a shorter focal length\footnote{The length between the lens and the focused image on the sensor} the lens converges the light stronger, therefore the focus is on the subject being imaged and the FoV is larger. In the vice-versa situation, the longer focal length allows for a focus on the image and thus provides a smaller FoV.
+
+The monocular cameras belong to the directional sensors, because they can perceive information only from the direction in which their optical part is adjusted. In contrast to LiDAR sensors, which has a 360$^{\circ}$ view of the environment around it and can not be affected by light
+conditions, single cameras are unreliable when exposed to bad light and weather conditions \cite{camera_vs_lidar}. As a main drawback of single cameras is regarded the lack of depth information, which impedes an accurate object recognition. Nevertheless, monocular cameras have advantages like lower integration price, much bigger availability on the market and the most important one is that they provide detailed pixel intensity information in form of a visual representation of the real world.
+
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{images/camera_fov.png}
-\caption[Single camera's FoV]{Depicting the influence of the focal length on the field of view, authored by footnote \ref{fov_figure} \label{fig:camera_fov}}
+\caption[Single camera's FoV]{Depicting the influence of the focal length on the field of view, authored by \cite{camera_fov_website} \label{fig:camera_fov}}
 \end{figure}
 
 \subsection{Camera model}\label{camera_model}
@@ -50,26 +52,58 @@ In order to illustrate how the transformation from a 3D world coordinate point t
                         0 & 0 & 1 & 0\end{bmatrix}
 \end{equation}
 
-As an output of the equation we receive the projection matrix $P_{new}$ and the last step is to transform the world coordinates of the point $M$ into the sensor's coordinate system. This is done by applying another multiplication the between a Euclidean homography matrix $H$ and the point $M$ coordinates, after which we can finally multiply the result with the projection matrix. The above-mentioned process is the following one:
+As an output of the equation we receive the projection matrix $P_{new}$ and the last step is to transform the world coordinates of the point $M$ into the sensor's coordinate system. This is done by applying another multiplication between a Euclidean homography matrix $H$ and the point $M$ coordinates, after which we finally multiply the projection matrix with the result. The above-mentioned process is the following one:
 
 \begin{equation}
 m = P_{new} \cdot H \cdot M
 \end{equation}
 
-\begin{figure}
+\begin{figure} [h]
 \centering
 \includegraphics[width = \textwidth, height = 10cm]{images/camera_model_pic.png}
-\caption[Single camera's model]{Scheme of the pinhole model and a projection of a 3D object on a 2D image plane\label{fig:camera_model}}
+\caption[Single camera's model]{Scheme of the pinhole model and a projection of a 3D object on a 2D image plane, based on \cite{camera_pinhole_model} \label{fig:camera_model}}
 \end{figure}
 
 %###################################################################################
 %###################### Topic B             ########################################
 %###################################################################################
 \section{CARLA - 3D autonomous driving simulator}\label{carla_background}
-In this section we introduce the open-source 3D simulator CARLA which is built on Unreal Engine 4 with the main purpose of facilitating autonomous driving researches. The simulation platform provides a great number of open digital assets like buildings, vehicles, pedestrians, whole cities, etc. What is more, the simulator is constantly developed by different people, who contribute to a realistic digital environment and efficient conducting of experiments and tests. In addition to the aforementioned benefits, CARLA gives the opportunity to researchers to work with urban layouts without having to consider any logistical difficulties of training and testing systems in the physical world or infrastructure costs \cite{carla_paper}. 
+In this section we introduce the open-source 3D simulator CARLA (Car Learning to Act) which runs as a layer over Unreal Engine 4 with the main purpose of facilitating autonomous driving research. The simulation platform provides a great number of open digital assets like buildings, vehicles, pedestrians, whole cities, etc. What is more, the simulator is constantly developed by a community of different developers, who contribute to a realistic digital environment and an efficient conducting of experiments and tests. In addition to the aforementioned benefits, CARLA gives the opportunity to researchers to work with urban layouts without having to consider any logistical difficulties of training and testing systems in the physical world or infrastructure costs \cite{carla_paper}. 
 
-\subsection{Instance Segmentation Camera}\label{instance_camera}
+In contrast to the real world, inside the Unreal-Engine based platform users are not limited to using a couple of vehicles, which enables them to cover a multitude of edge cases that are necessary for training and validation. Experiments often involve some kind of sensor, whose implementation and setup could be expensive and time-consuming, thus we use CARLA for this work, because it offers various types of sensors\footnote{\url{https://carla.readthedocs.io/en/latest/ref_sensors/}, visited on 20/11/2022} like RGB camera, depth camera, instance and semantic segmentation camera, LiDAR and radar systems.
 
+CARLA is developed as a client-server application, where the client communicates with the server through sockets. The client API is programmed in Python, and realises an interaction with the server by sending user-implemented Python scripts in return for sensor data. Simultaneously, the server's task is to render the received client data in a running simulation. There are two types of commands that the client could send:
+\begin{itemize}
+    \item \textbf{normal commands} - control the world actors like vehicles or pedestrians and can modify all their attributes
+    \item \textbf{meta-commands} - reset the simulation, define the server's behaviour, are responsible for the sensors and can apply different environmental settings like weather conditions or traffic density
+\end{itemize}
+
+Figure \ref{fig:carla_arch} presents a more detailed view about the scalable client-server architecture CARLA runs on. The server uses Unreal Engine 4 and Carla Plugins to create a realistic simulation of an urban environment, whereas the client communicates with it over TCP. This type of architecture allows multiple clients to connect with the server at the same time, although it is advisable to avoid it, because these are controlled by the developer and collisions could appear. It can be seen on the diagram that the CARLA API combines Python scripts and C++, which bring with itself the benefits of an uncomplicated environment for developers and a lower-lever robust communication. When the client is already connected to the server it can control the world actors and their behaviour as well. For instance, it uses a traffic manager to recreate a real-life traffic situations and define speed, direction, acceleration or other vehicle's attributes.
+
+\begin{figure} [h]
+\centering
+\includegraphics[width = 0.9\textwidth]{images/carla_arch.png}
+\caption[CARLA's architecture]{Scheme of CARLA's client-server architecture, based on \cite{carla_architecture} \label{fig:carla_arch}}
+\end{figure}
+
+\subsection{RGB and Instance Segmentation Camera}\label{instance_camera}
+In the above section we mentioned that CARLA supports different sensor types, among which the RGB and instance segmentation camera, which are the main focus of this thesis. The user defines a location in the simulator's world coordinates where a sensor should be spawn and apart from that the rotation of the sensor is adjusted to retrieve data from a specified direction. Furthermore, CARLA provides various basic and advanced camera attributes like FoV, image width, image height, lens distortion, calibration constant, etc\footnote{\url{https://carla.readthedocs.io/en/latest/ref_sensors/\#rgb-camera}, visited on 20/11/2022}. The output of the RGB camera is sensor-related information and raw data, which contains an array consisting of BGRA (blue, red, green and opacity index) 32-bit pixels.
+
+For the purpose of a better differentiation between objects of the same type, CARLA implements the instance segmentation camera\footnote{\url{https://carla.readthedocs.io/en/latest/ref_sensors/\#instance-segmentation-camera}, visited on 20/11/2022}. Unlike the RGB camera, this one does not display the object's real colours. It classifies them by class and instance ID, during which a tag is assigned to every pixel on the image plane according to the type of object (vehicle, building, road, traffic sign, etc) it contains \cite{instance_segmenatation_cam}. In the output we receive again a BGRA array, but the pixels consist of the following colour values:
+\begin{itemize}
+    \item \textbf{Red channel} - contains a tag value from 0-22, for each type of object it belongs to. Apart from the pre-defined tags, the user can create new ones.
+    \item \textbf{Green and Blue channel} - provide information about the internal ID of the object, which was set when it was initialised from Unreal Engine. We can retrieve the ID by solving this equation: $ID \: =  B + G * 256$
+\end{itemize}
+
+The information we get from an instance segmentation camera is useful for experiments, where we lack depth data and do not know whether one vehicle is located in front of another one. Moreover, the ground truth data contributes to more accurate and reliable results from the conducted experiments. To get an idea of the colour palette that the two cameras apply, we can have a look at the pictures below in Figure \ref{fig:camera_outputs}. 
+
+\begin{figure} [h]
+  \centering
+  \subfloat[RGB camera]{\includegraphics[width=0.5\textwidth]{images/rgb_cam.jpg}}
+  \hfill
+  \subfloat[Instance segmentation camera]{\includegraphics[width=0.5\textwidth]{images/instance_cam.jpg}}
+  \caption[CARLA's cameras]{These two images display the difference between the output of the two camera types.} \label{fig:camera_outputs}
+\end{figure}
 %###################################################################################
 %###################### Topic C             ########################################
 %###################################################################################
