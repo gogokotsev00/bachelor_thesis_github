@@ -22,7 +22,7 @@ The digital camera is an instrument used for creating images through capturing l
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.8\textwidth]{images/camera_construction.png}
-\caption[Digital camera's design]{This image illustrates simply the design of a digital camera, based on Schreer's book \cite{camera_pinhole_model} \label{fig:camera_construction}}
+\caption[Digital camera's design]{This image illustrates simply the design of a digital camera, from Schreer's book \cite{camera_pinhole_model} with some changes. Labels were translated to English and some new ones were added. \label{fig:camera_construction}}
 \end{figure}
 
 \newpage
@@ -61,7 +61,7 @@ m = P_{new} \cdot H \cdot M
 \begin{figure} [h]
 \centering
 \includegraphics[width = \textwidth, height = 10cm]{images/camera_model_pic.png}
-\caption[Single camera's model]{Schema of the pinhole model and a projection of a 3D object on a 2D image plane, based on \cite{camera_pinhole_model} \label{fig:camera_model}}
+\caption[Single camera's model]{Schema of the pinhole model and a projection of a 3D object on a 2D image plane, based on \cite{camera_pinhole_model} and \cite{second_model_of_camera} \label{fig:camera_model}}
 \end{figure}
 
 %###################################################################################
@@ -83,7 +83,7 @@ Figure \ref{fig:carla_arch} presents a more detailed view about the scalable cli
 \begin{figure} [h]
 \centering
 \includegraphics[width = 0.9\textwidth]{images/carla_arch.png}
-\caption[CARLA's architecture]{Scheme of CARLA's client-server architecture, based on \cite{carla_architecture} \label{fig:carla_arch}}
+\caption[CARLA's architecture]{Schema of CARLA's client-server architecture, based on \cite{carla_architecture} \label{fig:carla_arch}}
 \end{figure}
 
 After the in-depth explanation of CARLA's design, we introduce some terms and their definitions which are important for this work. In CARLA, objects like vehicles, sensors and pedestrians are called actors\footnote{\url{https://carla.readthedocs.io/en/latest/python_api/\#carlaactor}, visited on 20/11/2022}. A user can modify their location or rotation, which consists of pitch, yaw and roll (dimensions of movement through a medium), as well as other attributes of them. What is more, each actor has a ground truth bounding box\footnote{\url{https://carla.readthedocs.io/en/latest/python_api/\#carlaboundingbox}, visited on 20/11/2022}, that is a cuboid which contains the whole 3D object and could be used in object detection or tracking methods for example. 
