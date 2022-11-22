@@ -40,22 +40,22 @@ conditions, single cameras are unreliable when exposed to bad light and weather 
 \end{figure}
 
 \subsection{Camera model}\label{camera_model}
-In order to illustrate how the transformation from a 3D world coordinate point to a 2D sensor's coordinate system happens, we use the pinhole camera model from Schreer \cite{camera_pinhole_model}. Figure \ref{fig:camera_model} portrays how a point $M(X_{w}, Y_{w}, Z_{w})$ from a real world's object placed in front of the camera is orthogonally projected on the image plane. We then get the point $m$ defined in the image plane's coordinate system as $(u,v)^{T}$. As we can see, the projection center stays behind the image plane and its optical axis points in the Z-direction, therefore it intersects the image plane in the centre point $c$. When we want to define the location of a 3D world point on the image plane we have to use the camera's intrinsic matrix $A$, which contains parameter of the camera like the coordinates of the centre point $c(u_{0},v_{0})$ and the distance $\alpha = focal \: length / pixel \: size$, measured in pixels units. In the following equation we execute a matrix multiplication between the intrinsic matrix $A$ and a normalized 3x4 matrix $P_{N}$:
+In order to illustrate how the transformation from a 3D world coordinate point to a 2D sensor's coordinate system happens, we use the pinhole camera model from Schreer \cite{camera_pinhole_model}. Figure \ref{fig:camera_model} portrays how a point $M(X_{w}, Y_{w}, Z_{w})^{T}$ from a real world's object placed in front of the camera is orthogonally projected on the image plane. We define the projected point $m$ in the image plane's coordinate system as $m(u,v)^{T}$. As we can see, the projection center stays behind the image plane and its optical axis points in the Z-direction, therefore it intersects the image plane in the principle point $c$. When we want to define the location of a 3D world point on the image plane we have to use the camera's intrinsic matrix $A$, which contains parameters of the camera like the coordinates of the principle point $c(u_{0},v_{0})$, the scale factors $\alpha$ and $\beta$ of the $u$ and $v$ image axes and their skew index denoted by $\gamma$, which is 0 in ideal conditions with no distortion. We get $\alpha$ and $\beta$ by dividing the focal length $f$ and the pixel size $\delta$ . In the following equation we execute a matrix multiplication between the intrinsic matrix $A$ and a normalized 3x4 matrix $P_{N}$:
 
 \begin{equation}
     P_{new} = A P_{N} = \begin{bmatrix}
-                        \alpha & 0 & u_{0}\\
-                        0 & \alpha & v_{0}\\
+                        \alpha & \gamma & u_{0}\\
+                        0 & \beta & v_{0}\\
                         0 & 0 & 1\end{bmatrix} \cdot \begin{bmatrix}
                         1 & 0 & 0 & 0\\
                         0 & 1 & 0 & 0\\
-                        0 & 0 & 1 & 0\end{bmatrix}
+                        0 & 0 & 1 & 0\end{bmatrix} \: , where \: \alpha, \beta = f / \delta
 \end{equation}
 
-As an output of the equation we receive the projection matrix $P_{new}$ and the last step is to transform the world coordinates of the point $M$ into the sensor's coordinate system. This is done by applying another multiplication between a Euclidean homography matrix $H$ and the point $M$ coordinates, after which we finally multiply the projection matrix with the result. The above-mentioned process is the following one:
+As an output of the equation we receive the projection matrix $P_{new}$ and the last step is to transform the world coordinates of the point $M$ into the sensor's coordinate system. We use a Euclidean homography matrix $H$, which contains the extrinsic parameters $(R,t)$ (rotation and translation) that create a relation between world coordinates and camera coordinates. Then we apply multiplication between $H$ and the point $M$ coordinates. The final step is to multiply the projection matrix with the result. The above-mentioned process is the following one:
 
 \begin{equation}
-m = P_{new} \cdot H \cdot M
+m = P_{new} \cdot H \cdot M \:, with \: H = [R|t] 
 \end{equation}
 
 \begin{figure} [h]
