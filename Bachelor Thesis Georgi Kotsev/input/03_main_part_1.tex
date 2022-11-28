@@ -1,6 +1,30 @@
 \chapter{Methodology}
+In this chapter we present a detailed problem analysis and discuss our approach for solving the issue.
 \label{mainone}
 % DELETEME: In this chapter you start addressing your actual problem. Therefore, it makes often sense to make a detailed problem analysis first (if not done in introduction). You should be sure about what to do and how. While writing in the background part, it might also make sense to include complex background information or papers you are basing on in this analysis. If you are solving a software problem, you should follow the state of the art of software development which basically includes: problem analysis, design, implementation, testing, and deployment. Maintenance is often also described but I believe this will not be required for most theses. Code should be placed in the appendix unless it is solving an essential aspect of your work.
-\section{Problem anlaysis}
+\section{Problem Anlaysis}
 
-\section{Approach for solving the issue}
+
+
+\section{Approach for Solving the Issue}
+This section provides an explanation of what techniques were used in the problem's solution. It is split into smaller subsections, which consider different parts of the proposed strategy.
+
+\subsection{Organisation of the Simulation}
+In general, to conduct real-world experiments is rather expensive and time-consuming, therefore we simulate different scenarios using CARLA. What is more, there are no limitations in the digital environment and data samples can be created faster, which contain no distortions or noise. It offers an opportunity to test different approaches and ideas in ideal conditions without any restrictions.
+
+Our simulation takes place in a realistic digital city "Town10HD\_Opt" from the CARLA assets package, which represents a whole town including, i.e., buildings, trees, traffic lights, parked vehicles, etc. The main location of the experiments is a junction of four roads, because, compared to other types of junction, there exists a higher chance for accidents to happen, and an optimal camera placement is crucial for a safe mobility. On the junction's premises we place 3 CARLA objects from type Actor: 
+\begin{itemize}
+    \item 1 camera and 2 vehicles, which has the roles 'occluder' and 'target'
+\end{itemize}
+In pursuance of finding an optimal position for the camera sensor we consider the 4 angles of the region of interest (ROI) and also the points in the middle of each of the 4 edges. In this way, we earn an approximate idea which point or area has to be aimed for when placing a camera. Furthermore, this placement could be applied to other infrastructure of the same type, therefore it also guarantees flexibility and universality of the approach. 
+
+With regard to the vehicles, which play the most important role in our research, we divide them into two categories:
+
+\begin{itemize}
+    \item \textbf{occluder vehicle} - this is the vehicle that stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
+    \item \textbf{target vehicle} - this vehicle is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
+\end{itemize}
+During the simulation we spawn both vehicles in different locations on the junction in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not. 
+
+The simulation pipeline consists of three stages:
+

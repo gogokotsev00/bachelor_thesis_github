@@ -39,7 +39,7 @@ conditions, single cameras are unreliable when exposed to bad light and weather 
 \caption[Single camera's FoV]{Depicting the influence of the focal length on the field of view, authored by \cite{camera_fov_website} \label{fig:camera_fov}}
 \end{figure}
 
-\subsection{Camera model}\label{camera_model}
+\subsection{Camera Model}\label{camera_model}
 In order to illustrate how the transformation from a 3D world coordinate point to a 2D sensor's coordinate system happens, we use the pinhole camera model from Schreer \cite{camera_pinhole_model}. Figure \ref{fig:camera_model} portrays how a point $M(X_{w}, Y_{w}, Z_{w})^{T}$ from a real world's object placed in front of the camera is orthogonally projected on the image plane. We define the projected point $m$ in the image plane's coordinate system as $m(u,v)^{T}$. As we can see, the projection center stays behind the image plane and its optical axis points in the Z-direction, therefore it intersects the image plane in the principle point $c$. When we want to define the location of a 3D world point on the image plane we have to use the camera's intrinsic matrix $A$, which contains parameters of the camera like the coordinates of the principle point $c(u_{0},v_{0})$, the scale factors $\alpha$ and $\beta$ of the $u$ and $v$ image axes and their skew index denoted by $\gamma$, which is 0 in ideal conditions with no distortion. We get $\alpha$ and $\beta$ by dividing the focal length $f$ and the pixel size $\delta$ . In the following equation we execute a matrix multiplication between the intrinsic matrix $A$ and a normalized 3x4 matrix $P_{N}$:
 
 \begin{equation}
@@ -67,7 +67,7 @@ m = P_{new} \cdot H \cdot M \:, with \: H = [R|t]
 %###################################################################################
 %###################### Topic B             ########################################
 %###################################################################################
-\section{CARLA - 3D autonomous driving simulator}\label{carla_background}
+\section{CARLA - 3D Autonomous Driving Simulator}\label{carla_background}
 In this section we introduce the open-source 3D simulator CARLA (Car Learning to Act) which runs as a layer over Unreal Engine 4 with the main purpose of facilitating autonomous driving research. The simulation platform provides a great number of open digital assets like buildings, vehicles, pedestrians, whole cities, etc. What is more, the simulator is constantly developed by a community of different developers, who contribute to a realistic digital environment and an efficient conducting of experiments and tests. In addition to the aforementioned benefits, CARLA gives the opportunity to researchers to work with urban layouts without having to consider any logistical difficulties of training and testing systems in the physical world or infrastructure costs \cite{carla_paper}. 
 
 In contrast to the real world, inside the Unreal-Engine-based platform users are not limited to using a couple of vehicles, which enables them to cover a multitude of edge cases that are necessary for training and validation. Experiments often involve some kind of sensor, whose implementation and setup could be expensive and time-consuming, thus we use CARLA for this work, because it offers various types of sensors\footnote{\url{https://carla.readthedocs.io/en/latest/ref_sensors/}, visited on 20/11/2022} like RGB camera, depth camera, instance and semantic segmentation camera, LiDAR and radar systems.
