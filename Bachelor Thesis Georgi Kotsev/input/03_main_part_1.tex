@@ -12,7 +12,7 @@ This section provides an explanation of what techniques were used in the problem
 \subsection{Organisation of the Simulation}
 In general, to conduct real-world experiments is rather expensive and time-consuming, therefore we simulate different scenarios using CARLA. What is more, there are no limitations in the digital environment and data samples can be created faster, which contain no distortions or noise. It offers an opportunity to test different approaches and ideas in ideal conditions without any restrictions.
 
-Our simulation takes place in a realistic digital city "Town10HD\_Opt" from the CARLA assets package, which represents a whole town including, i.e., buildings, trees, traffic lights, parked vehicles, etc. The main location of the experiments is a junction of four roads, because, compared to other types of junction, there exists a higher chance for accidents to happen, and an optimal camera placement is crucial for a safe mobility. On the junction's premises we place 3 CARLA objects from type Actor: 
+Our simulation takes place in a realistic digital city "Town10HD\_Opt" from the CARLA assets package, which represents a whole town including, i.e., buildings, trees, traffic lights, parked vehicles, etc. The main location of the experiments is a junction of four roads, because, compared to other types of intersections, there exists a higher chance for accidents to happen, and an optimal camera placement is crucial for a safe mobility. On the junction's premises we place 3 CARLA objects from type Actor: 
 \begin{itemize}
     \item 1 camera and 2 vehicles, which has the roles 'occluder' and 'target'
 \end{itemize}
@@ -24,7 +24,7 @@ With regard to the vehicles, which play the most important role in our research,
     \item \textbf{occluder vehicle} - this is the vehicle that stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
     \item \textbf{target vehicle} - this vehicle is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
 \end{itemize}
-During the simulation we spawn both vehicles in different locations on the junction in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not.
+During the simulation we spawn both vehicles in different locations on the intersection in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not.
 
 \begin{figure} [h]
     \centering
@@ -38,15 +38,19 @@ During the simulation we spawn both vehicles in different locations on the junct
 This thesis relies on a simulation pipeline for conducting experiments and evaluating their output, which consists of three main stages that can be seen on Figure \ref{fig:evaluation_pipeline}: 
 
 \begin{enumerate}
-    \item Preparation of the experiment
-    \item Reproduction of possible scenarios
-    \item Evaluation of results
+    \item \textbf{Preparation of the experiment} - encompasses the configuration of all virtual world settings, as well as the creation of points on the test intersection that will be used during the experiments. In this stage a camera object is spawned within the simulated environment, which perceives the traffic and returns data that has to be evaluated. 
+    \item \textbf{Reproduction of possible scenarios} - during this stage we have tuples of vehicles(occluder and target) that are spawned on the waypoints generated in the previous stage. In addition, after each new spawn, images from the camera are saved for further evaluation of the occlusion degree and the other metrics.
+    \item \textbf{Evaluation of results} - being the last stage of the simulation pipeline, here the results are evaluated and used to generate a heatmap and a graph for a better visualisation, after which we discuss in \ref{evaluation} how our approach optimises traffic camera placement.
 \end{enumerate}
-
-
+In the following subsections we provide a more detailed explanation of how all the process from data generation via vehicles placement to output evaluation is realised.
 \begin{figure} [h]
     \centering
     \includegraphics[width=\textwidth]{images/evaluation_pipeline.png}
     \caption[Evaluation pipeline]{This diagram represents schematically the simulation pipeline}
     \label{fig:evaluation_pipeline}
 \end{figure}
+
+\subsection{Experiment Setup and Environment Preparation}
+Before each simulation it is important to adjust the world settings correctly in order to maintain a synchronous mode, which allows for reliable data from the sensors. In CARLA we set a client which communicates with our world and a traffic manager which is responsible for the behaviour of vehicles. 
+
+When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors.
