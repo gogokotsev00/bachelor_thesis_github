@@ -16,7 +16,7 @@ Our simulation takes place in a realistic digital city "Town10HD\_Opt" from the 
 \begin{itemize}
     \item 1 camera and 2 vehicles, which has the roles 'occluder' and 'target'
 \end{itemize}
-In pursuance of finding an optimal position for the camera sensor we consider the 4 angles of the region of interest (ROI) and also the points in the middle of each of the 4 edges. In this way, we earn an approximate idea which point or area has to be aimed for when placing a camera. Furthermore, this placement could be applied to other infrastructure of the same type, therefore it also guarantees flexibility and universality of the approach. 
+In pursuance of finding an optimal position for the camera sensor we consider the 4 angles of the region of interest (ROI) and also the points in the middle of each of the 4 edges like it is shown in Figure \ref{fig:camera_positions}. In this way, we earn an approximate idea which point or area has to be aimed for when placing a camera. Furthermore, this placement could be applied to other infrastructure of the same type, therefore it also guarantees flexibility and universality of the approach. 
 
 With regard to the vehicles, which play the most important role in our research, we divide them into two categories:
 
@@ -24,7 +24,29 @@ With regard to the vehicles, which play the most important role in our research,
     \item \textbf{occluder vehicle} - this is the vehicle that stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
     \item \textbf{target vehicle} - this vehicle is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
 \end{itemize}
-During the simulation we spawn both vehicles in different locations on the junction in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not. 
+During the simulation we spawn both vehicles in different locations on the junction in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not.
 
-The simulation pipeline consists of three stages:
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=\textwidth]{images/junction.png}
+    \caption[Camera experiment positions]{This picture displays an example where the camera is going to be placed during simulations}
+    \label{fig:camera_positions}
+\end{figure}
 
+\subsection{Simulation Pipeline}
+
+This thesis relies on a simulation pipeline for conducting experiments and evaluating their output, which consists of three main stages that can be seen on Figure \ref{fig:evaluation_pipeline}: 
+
+\begin{enumerate}
+    \item Preparation of the experiment
+    \item Reproduction of possible scenarios
+    \item Evaluation of results
+\end{enumerate}
+
+
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=\textwidth]{images/evaluation_pipeline.png}
+    \caption[Evaluation pipeline]{This diagram represents schematically the simulation pipeline}
+    \label{fig:evaluation_pipeline}
+\end{figure}
