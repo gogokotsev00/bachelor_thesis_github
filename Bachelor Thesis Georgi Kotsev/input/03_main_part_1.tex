@@ -1,16 +1,11 @@
-\chapter{Methodology}
-In this chapter we present a detailed problem analysis and discuss our approach for solving the issue.
+\chapter{Approach for Solving the Issue}
 \label{mainone}
 % DELETEME: In this chapter you start addressing your actual problem. Therefore, it makes often sense to make a detailed problem analysis first (if not done in introduction). You should be sure about what to do and how. While writing in the background part, it might also make sense to include complex background information or papers you are basing on in this analysis. If you are solving a software problem, you should follow the state of the art of software development which basically includes: problem analysis, design, implementation, testing, and deployment. Maintenance is often also described but I believe this will not be required for most theses. Code should be placed in the appendix unless it is solving an essential aspect of your work.
-\section{Problem Anlaysis}
 
+This chapter provides an explanation of what techniques were used in the problem's solution. It is split into smaller subsections, which consider different parts of the proposed strategy.
 
-
-\section{Approach for Solving the Issue}
-This section provides an explanation of what techniques were used in the problem's solution. It is split into smaller subsections, which consider different parts of the proposed strategy.
-
-\subsection{Organisation of the Simulation}
-In general, to conduct real-world experiments is rather expensive and time-consuming, therefore we simulate different scenarios using CARLA. What is more, there are no limitations in the digital environment and data samples can be created faster, which contain no distortions or noise. It offers an opportunity to test different approaches and ideas in ideal conditions without any restrictions.
+\section{Organisation of the Simulation}
+In general, to conduct real-world experiments is rather expensive and time-consuming, therefore we simulate different scenarios using CARLA. What is more, there are no limitations in the digital environment and data samples can be created faster without any distortions or noise. It offers an opportunity to implement and test different approaches and ideas in ideal conditions where no real-life restrictions exist.
 
 Our simulation takes place in a realistic digital city "Town10HD\_Opt" from the CARLA assets package, which represents a whole town including, i.e., buildings, trees, traffic lights, parked vehicles, etc. The main location of the experiments is a junction of four roads, because, compared to other types of intersections, there exists a higher chance for accidents to happen, and an optimal camera placement is crucial for a safe mobility. On the junction's premises we place 3 CARLA objects from type Actor: 
 \begin{itemize}
@@ -21,19 +16,19 @@ In pursuance of finding an optimal position for the camera sensor we consider th
 With regard to the vehicles, which play the most important role in our research, we divide them into two categories:
 
 \begin{itemize}
-    \item \textbf{occluder vehicle} - this is the vehicle that stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
-    \item \textbf{target vehicle} - this vehicle is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
+    \item \textbf{Occluder vehicle} - stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
+    \item \textbf{Target vehicle} - is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
 \end{itemize}
 During the simulation we spawn both vehicles in different locations on the intersection in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not.
 
 \begin{figure} [h]
     \centering
     \includegraphics[width=\textwidth]{images/junction.png}
-    \caption[Camera experiment positions]{This picture displays an example where the camera is going to be placed during simulations}
+    \caption[Camera experiment positions]{This picture displays an example where the camera is going to be placed during simulations and shows the borders of our range of interest.}
     \label{fig:camera_positions}
 \end{figure}
 
-\subsection{Simulation Pipeline}
+\section{Simulation Pipeline} \label{sec:sim_pipeline}
 
 This thesis relies on a simulation pipeline for conducting experiments and evaluating their output, which consists of three main stages that can be seen on Figure \ref{fig:evaluation_pipeline}: 
 
@@ -51,6 +46,35 @@ In the following subsections we provide a more detailed explanation of how all t
 \end{figure}
 
 \subsection{Experiment Setup and Environment Preparation}
-Before each simulation it is important to adjust the world settings correctly in order to maintain a synchronous mode, which allows for reliable data from the sensors. In CARLA we set a client which communicates with our world and a traffic manager which is responsible for the behaviour of vehicles. 
+As a prerequisite for each simulation it is important to adjust the world settings correctly in order to maintain a synchronous mode, which allows for reliable data from the sensors. In CARLA we set a client which communicates with our world and a traffic manager which is responsible for the behaviour of vehicles. 
 
-When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors.
+When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors. To clarify, all points belong to the road, where cars usually drive and no cases where a car spawns on the pavement or on a green area are considered. Furthermore, each point defines apart from the location also the direction in which the vehicle's head will point, therefore no situations like a car in the opposite direction or perpendicular to both driving directions occur in the experiments. For the purpose of covering maximal number of occlusion situations on the road we collect each existing waypoint that the simulator offers between the borders of the junction. On Figure \ref{fig:camera_positions} the ROI, defined by red borderlines, can be seen.
+
+At the end of the preparation step we spawn a camera actor which should monitor all scenarios and perceive crucial for the research data. Therefore, cameras are positioned on such points, where they achieve maximal coverage of the range of interest and are able to avoid more potential occlusions. Each camera have adjustable parameter that are described in Table \ref{tab:camera_params}. In addition to these parameters, we define the camera tilt angle in a vertical plane, whose degree value is such that the camera field of view covers a bigger part of the intersection. 
+\begin{table}[h]
+\caption{Table for camera parameters and definitions used in this thesis\label{tab:camera_params}}
+\centering
+    \begin{tabular}{ | l | p{5cm} |}
+    \hline
+    Parameter & Definition  \\ \hline
+    fov & Horizontal field of view in degrees. \\ \hline
+    image\_size\_x & Image width in pixels. \\ \hline
+    image\_size\_y & Image height in pixels. \\ \hline
+    fstop & Opening of the camera lens. Aperture is 1/fstop with typical
+    lens going down to f/1.2 (larger opening). \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Simulation of scenarios}
+Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on the previously generated waypoints. The idea of this approach is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to analyse dynamic occlusion without the need of moving objects.
+
+Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. Since we are focused on the occlusion degree, we have to know what percentage of the target vehicle is occluded. Due to the lack of depth information in a normal camera, an instance segmentation camera (see \ref{instance_camera}) is applied instead of using an algorithm for object detection. The reason for this strategy is that this camera type provides us with ground-truth data in the form of an image, whose pixels have colour values according to the object each of them contain. 
+
+In order to calculate the correct percentage of occlusion, first is spawned the target vehicle, its number of pixels on the image plane are counted and then the occluder is spawned. Having both vehicles in the world, we can extract the part under occlusion. However, it is possible that in particular cases no occlusion exists, i.e., when the occluder is not positioned between the sensor and the target vehicle. Each tuple of points observed returns the following the output:
+\begin{itemize}
+    \item world coordinates of target vehicle (x, y, z)
+    \item rotation of target vehicle (pitch, yaw, roll)
+    \item occlusion degree given in percent
+\end{itemize}
+
+\subsection{Evaluation of results}
