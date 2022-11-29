@@ -48,7 +48,7 @@ In the following subsections we provide a more detailed explanation of how all t
 \subsection{Experiment Setup and Environment Preparation}
 As a prerequisite for each simulation it is important to adjust the world settings correctly in order to maintain a synchronous mode, which allows for reliable data from the sensors. In CARLA we set a client which communicates with our world and a traffic manager which is responsible for the behaviour of vehicles. 
 
-When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors. To clarify, all points belong to the road, where cars usually drive and no cases where a car spawns on the pavement or on a green area are considered. Furthermore, each point defines apart from the location also the direction in which the vehicle's head will point, therefore no situations like a car in the opposite direction or perpendicular to both driving directions occur in the experiments. For the purpose of covering maximal number of occlusion situations on the road we collect each existing waypoint that the simulator offers between the borders of the junction. On Figure \ref{fig:camera_positions} the ROI, defined by red borderlines, can be seen.
+When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors. To clarify, all points belong to the road, where cars usually drive and no cases where a car spawns on the pavement or on a green area are considered. Furthermore, each point defines apart from the location also the direction in which the vehicle's head will point, therefore no situations like a car in the opposite direction or perpendicular to both driving directions occur in the experiments. For the purpose of covering maximal number of occlusion situations on the road we collect each existing waypoint in Figure \ref{fig:waypoints} that the simulator offers between the borders of the junction. On Figure \ref{fig:camera_positions} the ROI, defined by red borderlines, can be seen.
 
 At the end of the preparation step we spawn a camera actor which should monitor all scenarios and perceive crucial for the research data. Therefore, cameras are positioned on such points, where they achieve maximal coverage of the range of interest and are able to avoid more potential occlusions. Each camera have adjustable parameter that are described in Table \ref{tab:camera_params}. In addition to these parameters, we define the camera tilt angle in a vertical plane, whose degree value is such that the camera field of view covers a bigger part of the intersection. 
 \begin{table}[h]
@@ -70,11 +70,28 @@ Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our exper
 
 Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. Since we are focused on the occlusion degree, we have to know what percentage of the target vehicle is occluded. Due to the lack of depth information in a normal camera, an instance segmentation camera (see \ref{instance_camera}) is applied instead of using an algorithm for object detection. The reason for this strategy is that this camera type provides us with ground-truth data in the form of an image, whose pixels have colour values according to the object each of them contain. 
 
-In order to calculate the correct percentage of occlusion, first is spawned the target vehicle, its number of pixels on the image plane are counted and then the occluder is spawned. Having both vehicles in the world, we can extract the part under occlusion. However, it is possible that in particular cases no occlusion exists, i.e., when the occluder is not positioned between the sensor and the target vehicle. Each tuple of points observed returns the following the output:
+In order to calculate the correct percentage of occlusion, first is spawned the target vehicle, its number of pixels on the image plane are counted and then the occluder is spawned. Having both vehicles in the world, we can extract the part under occlusion. However, it is possible that in particular cases no occlusion exists, i.e., when the occluder is not positioned between the sensor and the target vehicle. In Figure \ref{fig:occlusion_views} it is shown how depending on the point of view an occlusion is either visible or does not occur. Each tuple of points observed returns the following the output:
 \begin{itemize}
     \item world coordinates of target vehicle (x, y, z)
     \item rotation of target vehicle (pitch, yaw, roll)
     \item occlusion degree given in percent
 \end{itemize}
 
-\subsection{Evaluation of results}
+\begin{figure} [h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/waypoints.png}
+    \caption[Intersection waypoints]{This picture illustrates the spawn points for our vehicles}
+    \label{fig:waypoints}
+\end{figure}
+
+\begin{figure} [h!]
+  \centering
+  \subfloat[Occlusion from camera's point of view]{\includegraphics[width=0.57\textwidth]{images/camera_view_occlusion.jpg}}
+  \hfill
+  \subfloat[Occlusion from side point of view]{\includegraphics[width=0.43\textwidth]{images/different_view_occlusion.jpg}}
+  \caption[Occlusion points of view]{These two images display how an occlusion is perceived from different points of view.} \label{fig:occlusion_views}
+\end{figure}
+
+\newpage
+\subsection{Evaluation of Results}
+When we already have the data from the simulation stage, it should be visualised for a better understanding of the results. This thesis uses heatmaps to illustrate where the occlusion occurs at most and thus choose the most optimal point of view for a camera.
