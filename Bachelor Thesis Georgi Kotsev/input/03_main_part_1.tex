@@ -65,12 +65,23 @@ At the end of the preparation step we spawn a camera actor which should monitor 
     \end{tabular}
 \end{table}
 
-\subsection{Simulation of scenarios}
+\begin{figure} [h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/waypoints.png}
+    \caption[Intersection waypoints]{This picture illustrates the spawn points for our vehicles}
+    \label{fig:waypoints}
+\end{figure}
+\newpage
+
+\subsection{Simulation of scenarios} \label{sec:sim_stage}
 Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on the previously generated waypoints. The idea of this approach is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to analyse dynamic occlusion without the need of moving objects.
 
-Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. Since we are focused on the occlusion degree, we have to know what percentage of the target vehicle is occluded. Due to the lack of depth information in a normal camera, an instance segmentation camera (see \ref{instance_camera}) is applied instead of using an algorithm for object detection. The reason for this strategy is that this camera type provides us with ground-truth data in the form of an image, whose pixels have colour values according to the object each of them contain. 
+Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. 
 
-In order to calculate the correct percentage of occlusion, first is spawned the target vehicle, its number of pixels on the image plane are counted and then the occluder is spawned. Having both vehicles in the world, we can extract the part under occlusion. However, it is possible that in particular cases no occlusion exists, i.e., when the occluder is not positioned between the sensor and the target vehicle. In Figure \ref{fig:occlusion_views} it is shown how depending on the point of view an occlusion is either visible or does not occur. Each tuple of points observed returns the following the output:
+Due to the focus being on the occlusion degree, we have to know what percentage of the target vehicle is occluded. Our first idea was to use the bounding boxes of each vehicle, which are provided by the simulator. We converted the all its 8 vertices from the 3D world to the 2D image plane by choosing the upper-, lower-,  left- and rightmost points as exemplified with red points in Figure \ref{fig:bb_conversion}. Subsequently, we have an approximate 2D representation of the vehicle's borders and can subtract the visible part from the occluded car. However, after some experimentation with this strategy, it was asserted that this method is inefficient and unreliable. In comparison to the following approach, this one returns results with ca. 30-40\% difference from the correct and expected values. The main reason that justifies this behaviour is that a bounding box contains more points or pixels than these, which belong to the vehicle. Therefore, we needed another solution that calculates the occlusion precisely, which would be of utmost importance if later our approach is applied in a real-world scenario.
+In our current implementation, due to the lack of depth information from a normal camera, an instance segmentation camera (see \ref{instance_camera}) is applied instead of using an algorithm for object detection. The reasons for this strategy are mainly simplicity and accuracy, because this camera type provides us with ground-truth data in the form of an image, whose pixels have colour values according to the object each of them contain. 
+
+In order to calculate the correct percentage of occlusion, first is spawned the target vehicle, its number of pixels on the image plane are counted \myworries{Add a reference to the next chapter} and then the occluder is spawned. When both vehicles are present in the world, we can extract the part under occlusion. However, it is possible that in particular cases no occlusion exists, i.e., when the occluder is not positioned between the sensor and the target vehicle. In Figure \ref{fig:occlusion_views} it is shown how depending on the point of view an occlusion is either visible or does not occur. After each tuple of points is observed the implementation returns the following output, which is saved in a text file:
 \begin{itemize}
     \item world coordinates of target vehicle (x, y, z)
     \item rotation of target vehicle (pitch, yaw, roll)
@@ -79,19 +90,21 @@ In order to calculate the correct percentage of occlusion, first is spawned the 
 
 \begin{figure} [h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{images/waypoints.png}
-    \caption[Intersection waypoints]{This picture illustrates the spawn points for our vehicles}
-    \label{fig:waypoints}
+    \includegraphics[width=0.8\textwidth]{images/2D_bounding_boxes.png}
+    \caption[3D bounding box conversion]{On this illustration is shown the conversion from a 3D bounding box to a 2D one, which a camera would perceive.}
+    \label{fig:bb_conversion}
 \end{figure}
 
 \begin{figure} [h!]
   \centering
-  \subfloat[Occlusion from camera's point of view]{\includegraphics[width=0.57\textwidth]{images/camera_view_occlusion.jpg}}
+  \subfloat[Occlusion from camera's point of view]{\includegraphics[width=0.574\textwidth]{images/camera_view_occlusion.jpg}}
   \hfill
-  \subfloat[Occlusion from side point of view]{\includegraphics[width=0.43\textwidth]{images/different_view_occlusion.jpg}}
+  \subfloat[Occlusion from side point of view]{\includegraphics[width=0.426\textwidth]{images/different_view_occlusion.jpg}}
   \caption[Occlusion points of view]{These two images display how an occlusion is perceived from different points of view.} \label{fig:occlusion_views}
 \end{figure}
 
 \newpage
 \subsection{Evaluation of Results}
-When we already have the data from the simulation stage, it should be visualised for a better understanding of the results. This thesis uses heatmaps to illustrate where the occlusion occurs at most and thus choose the most optimal point of view for a camera.
+When we already have the data from the simulation stage, it should be visualised for a better understanding of the results. In the evaluation stage, this thesis makes use of heatmap to illustrate where the occlusion occurs at most and thus choose the most optimal point of view for a camera. For the purpose of a coherent visualisation we discretise the intersection in equal rectangular blocks where each block has world X and Y coordinate values. Furthermore, to each of these blocks are assigned the positions where the target vehicle has been spawned. As mentioned in \ref{sec:sim_stage}, we receive an occlusion degree for each tuple of the junction's waypoints, which means that for a single position of the target we usually have more than one occlusion degree available. For this reason, during the generation of a heatmap for each saved spawn position in the result file, we calculate the average occlusion from all the values assigned to the position and display it on the map with an according colour from the colour palette. We use the heatmaps to explain whether the camera placement is optimal or not according to the amount of occlusion it detects, i.e., light colours imply that a little amount of occlusion was perceived whereas darker colours indicate loss of sight and an unfavourable sensor position.
+
+In addition to the occlusion degree, we also rely on some metrics for the
