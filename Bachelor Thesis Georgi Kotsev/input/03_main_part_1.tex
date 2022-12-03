@@ -23,7 +23,7 @@ During the simulation we spawn both vehicles in different locations on the inter
 \begin{figure} [h]
     \centering
     \includegraphics[width=\textwidth]{images/junction.png}
-    \caption[Camera experiment positions]{This picture displays an example where the camera is going to be placed during simulations and shows the borders of our range of interest.}
+    \caption[Camera experiment positions]{This picture displays an example where the camera is going to be placed during simulations and shows the borders of our region of interest.}
     \label{fig:camera_positions}
 \end{figure}
 
@@ -49,7 +49,7 @@ As a prerequisite for each simulation it is important to adjust the world settin
 
 When we are done with the creation of our simulated environment, the main priority is to generate waypoints within the intersection, which serve as spawn points for the vehicle actors. To clarify, all points belong to the road, where cars usually drive and no cases where a car spawns on the pavement or on a green area are considered. Furthermore, each point defines apart from the location also the direction in which the vehicle's head will point, therefore no situations like a car in the opposite direction or perpendicular to both driving directions occur in the experiments. For the purpose of covering maximal number of occlusion situations on the road we collect each existing waypoint in Figure \ref{fig:waypoints} that the simulator offers between the borders of the junction. On Figure \ref{fig:camera_positions} the ROI, defined by red borderlines, can be seen.
 
-At the end of the preparation step we spawn a camera actor which should monitor all scenarios and perceive crucial for the research data. Therefore, cameras are positioned on such points, where they achieve maximal coverage of the range of interest and are able to avoid more potential occlusions. Each camera have adjustable parameter that are described in Table \ref{tab:camera_params}. In addition to these parameters, we define the camera tilt angle in a vertical plane, whose degree value is such that the camera field of view covers a bigger part of the intersection. 
+At the end of the preparation step we spawn a camera actor which should monitor all scenarios and perceive crucial for the research data. Therefore, cameras are positioned on such points, where they achieve maximal coverage of the region of interest and are able to avoid more potential occlusions. Each camera have adjustable parameter that are described in Table \ref{tab:camera_params}. In addition to these parameters, we define the camera tilt angle in a vertical plane, whose degree value is such that the camera field of view covers a bigger part of the intersection. 
 \begin{table}[h]
 \caption{Table for camera parameters and definitions used in this thesis\label{tab:camera_params}}
 \centering
@@ -71,7 +71,7 @@ At the end of the preparation step we spawn a camera actor which should monitor 
 \newpage
 
 \subsection{Simulation of scenarios} \label{sec:sim_stage}
-Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on the previously generated waypoints. The idea of this approach is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to analyse dynamic occlusion without the need of moving objects.
+One main problem is that most of the researches considers only static obstacles as occluder when executing their experiments and do not take into account the dynamic occlusion. Therefore, we follow the idea of \cite{occlusion_degree_model} and apply a similar approach in our work. Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on previously generated waypoints. The idea of this strategy is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to analyse dynamic occlusion without the need of moving objects.
 
 Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. 
 
