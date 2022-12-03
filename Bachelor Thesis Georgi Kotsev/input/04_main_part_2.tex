@@ -1,3 +1,19 @@
-\chapter{Implementation}
-\label{maintwo}
+\chapter{Implementation} \label{implementation}
+This chapter describes how the approach we proposed in Chapter \ref{approach} is applied by using the Python API offered by CARLA. Moreover, we reveal the software implementation of the processes behind each of the three stages in our simulation pipeline.  
 
+\section{Setup of Virtual Environment}
+The simulation pipeline consists of three main stages - Data Generation for the experiments, Simulation of possible real-world scenarios and Evaluation of the results, as it was explained in the previous chapter. In the course of our first stage, we connect the client to the simulator's server, which represents the digital world for our research. The 3D simulator provides two options for a communication between client and server\footnote{\url{https://carla.readthedocs.io/en/latest/adv_synchrony_timestep/}, visited on 02/12/2022}:
+\begin{itemize}
+    \item \textbf{synchronous mode} - in this mode the client must notify via tick when all the commands are prepared that the server is obliged to execute. This is the mode which is relevant for simulations where synchrony between, i.e., sensors and world is crucial. 
+    \item \textbf{asynchronous mode} - this is the default mode, where the server runs the simulation as fast as possible and does not have to wait for a signal from the client, which ensures that everything is ready for the next step 
+\end{itemize}
+
+For this work the synchronous mode is set, because we require an environment, where we know location and rotation of world objects, receive accurate data from the camera and maintain a consistent connection to the server. When we enable the synchronous mode, we create a synchronous instance of the Traffic Manager, which handles any group of vehicles in the simulated world.
+
+\subsection{Sensor placement}
+Having all synchrony-related settings adjusted, we then instantiate a new object of type Sensor from CARLA's blueprint library\footnote{\url{https://carla.readthedocs.io/en/latest/bp_library/}, visited on 03/12/2022}. This is a subtype of actor which can measure and stream data. For this thesis the sensor is instance segmentation camera which has the main parameters of each camera sensor: field of view, width and height of generated image. What is more, a sensor is responsible for perceiving data either whenever a new event is registered or on each tick signal received from the client. This sensor in particular has a task to render all elements contained in the field of view with a specific colour according to their semantic tags (vehicle, building, traffic light, etc.) and a unique object ID (assigned by the Unreal Engine at the moment of instantiation). 
+
+With regard to the spawning of sensor, in CARLA one can attach it to a vehicle and thus to visualise an on-board point of view. However, the goal of this thesis is to find an optimal position in the infrastructure, therefore we spawn our traffic monitoring tool as displayed in Figure \ref{fig:camera_positions} on particular locations. Again, there is no algorithm for locations generation, they are completely random and aim to compare three points in each border of the range of interest, which makes eight in total. In order to receive data, which is then forwarded along the pipeline for examination, sensors have an integrated listening method. In short, there we provide as an argument a function that inserts every new image in a queue, which then can be accessed during the evaluation part. At the end, we define the height and tilt angle of the camera so that it points to the intersection and have an unobstructed view.
+
+\subsection{Waypoints generation}
+The last step from the first stage is generation of waypoints suitable for our experiments, where pair of vehicles are going to be placed to recreate real-world situations and estimate occlusion percentage, which prevents the camera from a correct perception of the surrounding environment.  
