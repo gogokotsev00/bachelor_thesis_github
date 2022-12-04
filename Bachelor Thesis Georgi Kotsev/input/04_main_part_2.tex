@@ -35,6 +35,13 @@ It is beneficial for the needs of our experiments to be able to define what dist
 \section{Simulation of valid scenarios}
 For the purpose of suggesting an optimal position for a camera sensor in the infrastructure that could enhance autonomous vehicles, improve communication between them and facilitate mobility per se, we have to reproduce real-world scenarios and observe how the sensor perform. The focus of this work is the occlusion, which occurs in everyday traffic when larger vehicles intercept a sensor's field of view, therefore we apply our own approach based on the Occlusion Degree Model proposed by Du et al. in \cite{occlusion_degree_model}. In subsection \ref{sec:sim_stage} we give a detailed explanation of how our experiments are designed, whereas here the technical means used by this stage are addressed.
 
+\begin{figure} [h!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/behind_sensor.png}
+    \caption[Vehicle spawned behind the camera]{We can see on this image a situation where the occluder is spawned out of the sensor's field of view, which makes it invisible for the sensor and is excluded from the experiment.}
+    \label{fig:behind_sensor}
+\end{figure}
+
 \subsection{Spawning vehicles and their roles}
 To start with, in each simulation we have two actor objects from type Carla.Vehicle, which can be chosen from the blueprint library\footnote{\url{https://carla.readthedocs.io/en/latest/bp_library/\#vehicle}, visited on 03/12/2022}. In this library a user can select whichever vehicle he needs for his purposes. In addition, vehicles are varying from motorcycles through small cars to large trucks. Again, our implementation inserts two vehicles in the virtual environment, which take the roles 'occluder' and 'target' depending on the vehicle's size. This means that if we put the label occluder to a vehicle 2x3m-sized vehicle and as a target vehicle we have a 4x8m-sized truck, it is certain that such scenario will be useless for experimental purposes, because in 95\% of the cases a normal object recognition algorithm would not have troubles in detecting it. For this reason, we suggest that always the occluder is larger than the target vehicle, which will guarantee more reliability of the results if this approach is to be adopted by further studies.
 
@@ -48,10 +55,18 @@ Before placing the target on the first received waypoint, it is checked if the v
     \item If the final coordinates are negative or exceeds either the image's width or height then the vehicle is not spawned as it is practically invisible to the camera, and no occlusion could happen.
 \end{enumerate}
 
-When this check returns a positive output, we spawn the target vehicle on a location which is different from the target's one, because they cannot be spawned at the exact same point. The above described process checks again whether the occluder is visible for the camera and if that is the case it is placed successfully. During each iteration the camera records the situation on the road and streams data for evaluation of the occlusion, which is explained in the next subsection. Then the occluder is destroyed and simulation continues while the list with spawn points is not empty.
+When this check returns a positive output, we spawn the target vehicle on a location which is different from the target's one, because they cannot be spawned at the exact same point. The above described process checks again whether the occluder is visible for the camera, i.e. in Figure \ref{fig:behind_sensor} the Mercedes Sprinter is behind the sensor and would cause no occlusion, therefore it won't be considered in the experiment, but if that is not the case, the occluder successfully gets placed on the virtual intersection. During each iteration the camera records the situation on the road and streams data for evaluation of the occlusion, which is explained in the next subsection. Then the occluder is destroyed and simulation continues while the list with spawn points is not empty.
 
- \subsection{Camera output and occlusion calculation}
- In this work is used the instance segmentation camera as a reliable sensor that provides only ground-truth data. The most important advantage of this type of camera is that it can perform better than an object recognition method. However, it is still under development by the CARLA creators and has one drawback that after we spawn the target vehicle, we have to wait several ticks until it's displayed on the image plane. This happens because in the simulator a vehicle is always spawned in the air, therefore it needs some time to land on the ground and the world's physics to be adjusted. Nevertheless, this issue does not cause any delays for the simulation.
+\begin{figure} [h!]
+  \centering
+  \subfloat[Vehicle at the moment of spawn]{\includegraphics[width=0.5\textwidth]{images/spawn_air.jpg}}
+  \hfill
+  \subfloat[Vehicle on the ground]{\includegraphics[width=0.5\textwidth]{images/spawn_ground.jpg}}
+  \caption[Spawning a vehicle]{Both picture illustrate the described CARLA physics when a vehicle is spawned, it hovers first in the air and lands after some time on the ground.} \label{fig:spawn_vehicle}
+\end{figure}
+
+ \subsection{Camera output and occlusion calculation} \label{subsec:calc_occl}
+ In this work is used the instance segmentation camera as a reliable sensor that provides only ground-truth data. The most important advantage of this type of camera is that it can perform better than an object recognition method. However, it is still under development by the CARLA creators and has one drawback that after we spawn the target vehicle, we have to wait several ticks until it's displayed on the image plane. This happens because in the simulator a vehicle is always spawned in the air, therefore it needs some time to land on the ground and the world's physics to be adjusted as shown in Figure \ref{fig:spawn_vehicle}. Nevertheless, this issue does not cause any delays for the simulation.
  
  To calculate the occlusion, we need an image of the target vehicle alone and an image where both vehicles are available in the world. Therefore, the first image is taken after the target vehicle is spawned, then if the occluder can also be spawned we destroy the target and respawn it, so that it can be on the same position as in the previous image. The main reason for doing this is again the fact that vehicles fall some time before they finally land on the ground, which causes change in the number of pixels containing the vehicle and consequently the result's accuracy. For the calculation we use the following help methods:
  \begin{itemize}
@@ -59,17 +74,25 @@ When this check returns a positive output, we spawn the target vehicle on a loca
      \item \textbf{Calculation of pixels containing a specific label} - in CARLA each item has a tag which defines the type of the object, e.g., whether it is a vehicle a building or something else. This method calculates how many pixels contain a given type using the information from the red channel. 
  \end{itemize}
 
-With the first help method we are able to generate arrays through which we can iterate while the second one tells us how many pixels is the target vehicle, when the occluder is absent. We then iterate through the 2D array and look only in rows whose pixels contain objects from type vehicle. In each row we check again only columns containing a vehicle and calculate the ID of a vehicle using the blue and green value of a pixel. An important point to be made is that Unreal Engine gives an ID to each object spawned in the 3D world, which is not always the result of the expression \ref{eq:instance}, where B represents the blue value and G the green one.
+With the first help method we are able to generate arrays through which we can iterate while the second one tells us how many pixels is the target vehicle, when the occluder is absent. We then iterate through the 2D array and look only in rows whose pixels contain objects from type vehicle. In each row we inspect again only columns containing a vehicle and calculate the ID of a vehicle using the blue and green value of a pixel. An important point to be made is that Unreal Engine gives an ID to each object spawned in the 3D world, which is not always the result of the expression \ref{eq:instance}, where B represents the blue value and G the green one.
 When the ID crosses the hexadecimal value of $0\times10000$ which is 65536 in a decimal number system, we have to subtract this value from the object's ID so many times as it is contained in it, which is shown in the equation \ref{eq:new_id}.
 
 \begin{equation}B + G * 256\label{eq:instance}\end{equation}
 
 \begin{equation}\textrm{new\_ID} \: = \textrm{ID} - \lfloor \textrm{ID} / 65535 \rfloor * 65536\label{eq:new_id}\end{equation}
 
-After we are done with the calculations, we check if the occluder's ID equals the converted blue and green channels' values and increment the number of target's visible pixels. If we have reached a situation where the visible numbers are equal to all pixels from the first image, meaning the vehicle is not occluded, we break the loop and return the occlusion, which comprises the result of equation \ref{eq:occlusion}. Apart from the occlusion, the location of the target vehicle is also included in a text document after each iteration. At the end of the simulation, we also add the number of times a vehicle was not visible on the camera and therefore not spawned to the document, which is crucial for the evaluation stage.  
+After we are done with the described calculations, we check if the occluder's ID equals the converted blue and green channels' values and increment the number of target's visible pixels. If we have reached a situation where the visible numbers are equal to all pixels from the first image, meaning the vehicle is not occluded, we break the loop and return the occlusion, which comprises the result of equation \ref{eq:occlusion}. In Figure \ref{fig:occlusion_calc} an example of two pictures used for estimation of the occlusion are provided, where the occlusion on the second one is 75\% and at this point exists a higher chance that the target vehicle is not detectable. Apart from the occlusion, the location of the target vehicle is also included in a text document after each iteration. At the end of the simulation, we also add the number of times a vehicle was not visible on the camera and therefore not spawned to the document, which is crucial for the evaluation stage.  
 
 \begin{equation}
     \frac{\textrm{target\_max\_pixels} - \textrm{target\_visible\_pixels}}{\textrm{target\_max\_pixels}} * 100 \label{eq:occlusion}
 \end{equation}
+
+\begin{figure} [h!]
+  \centering
+  \subfloat[Single target vehicle]{\includegraphics[width=0.5\textwidth]{images/before_occlusion.jpg}}
+  \hfill
+  \subfloat[Both occluder and target vehicles]{\includegraphics[width=0.5\textwidth]{images/after_occlusion.jpg}}
+  \caption[Calculation of an occlusion]{The two images represent how vehicles are seen through the instance segmentation camera. On the right picture there is an occlusion of 75\%, visible pixels of each vehicle are shown in bubbles above them.} \label{fig:occlusion_calc}
+\end{figure}
  
  \section{Evaluation of the results}
