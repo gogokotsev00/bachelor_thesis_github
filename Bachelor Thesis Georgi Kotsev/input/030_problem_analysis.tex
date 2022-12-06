@@ -1,1 +1,12 @@
 \chapter{Problem analysis} \label{problem_analysis}
+This chapter addresses some problems that this thesis tries to solve and analyses advantages and disadvantages of some strategies. It also includes information about which approaches serve as a model for our approach.
+
+\section{Main Problems in the Area}
+Camera placement optimisation has been a widely researched field for decades, because it is a complicated task, involves different and does not have an exact solution. There are numerous works which propose their own strategies and in this way contribute to constant progress in the area. We are now going to discuss some of the main problems this thesis is concerned with.
+
+To begin with, when the focus is on the traffic and its participants, surveillance cameras should be able to efficiently recognise each object, in order to be aware of its position, size, speed, etc. Using 3D object detection, they should aid autonomous vehicles in collision prevention or path planning. However, a major setback is that traffic is dynamic and objects are constantly moving, some of which are larger than others and therefore create a blind zone in the camera's field of view. This phenomenon is effected by traffic conditions and changes depending on the vehicles passing through. Furthermore, occlusion causes a great impact on performance of directional sensors, like cameras, because it prevents them from an accurate and clear perception of the environment. One study that tries to handle this issue is \cite{occlusion_degree_model} (see \ref{related_work}) where they propose a mathematical model, which describes this behaviour in a 3D space. With the help of various metrics, they examine how big 'occluder' vehicles impede the view to other 'target' vehicles and thus decrease object detection's ability of a camera, for example. They prove that traffic density and presence of trucks lead to performance loss, which means that object detection algorithms used for cameras are limited to the sensor's not disrupted sight. Although there are now algorithms, which use trained neural networks to work with occlusions like \cite{object_detection_alg}, their results are still not fully accurate and precise when an object stays in front of a target.
+
+Another major issue is 
+
+\section{Advantages and disadvantages of approaches}
+
