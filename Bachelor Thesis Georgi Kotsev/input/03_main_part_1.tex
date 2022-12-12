@@ -18,7 +18,7 @@ With regard to the vehicles, which play the most important role in our research,
     \item \textbf{Occluder vehicle} - stays between the sensor and the target vehicle and covers some part of it because of its larger size or position regarding the sensor. For a realistic scenario we use a medium and large-sized vans or trucks, so that their shape generate a blind zone for the sensor's field of view, which then cannot recognize the occluded vehicle. 
     \item \textbf{Target vehicle} - is equal or smaller than the occluder, because we have to measure the degree to which it is occluded in various positions. If, for example, it has the bigger proportions, the chance of a camera not detecting it is quite decreased even if it stays behind the occluder. 
 \end{itemize}
-During the simulation we spawn both vehicles in different locations on the intersection in order to reproduce as many as possible dynamic situations and decide whether an occlusion occurs or not.
+During the simulation we spawn both vehicles in different locations on the intersection in order to reproduce as many as possible static situations and decide whether an occlusion occurs or not.
 
 \begin{figure} [h]
     \centering
@@ -71,7 +71,7 @@ At the end of the preparation step we spawn a camera actor which should monitor 
 \newpage
 
 \subsection{Simulation of scenarios} \label{sec:sim_stage}
-One main problem is that most of the researches considers only static obstacles as occluder when executing their experiments and do not take into account the dynamic occlusion. Therefore, we follow the idea of \cite{occlusion_degree_model} and apply a similar approach in our work. Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on previously generated waypoints. The idea of this strategy is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to analyse dynamic occlusion without the need of moving objects.
+Many researches consider only static obstacles as occluder when executing their experiments and do not take into account the dynamic occlusion. Therefore, we follow the idea of \cite{occlusion_degree_model} and apply a similar approach in our work combined with static measurements. Like mentioned in \ref{sec:sim_pipeline} we use vehicles as actors for our experiments, which we spawn on previously generated waypoints. The idea of this strategy is to have two different by size vehicles, which are called an 'occluder' and a 'target', because we aim to reproduce the occlusion that happens each day in traffic. Autonomous vehicles require an accurate perception of the world around them to avoid accidents, which is why we recreate various scenarios by placing the vehicles on each pair of points. By doing so, we get the chance to recreate and analyse some occlusions, which could happen in a dynamic environment.
 
 Vehicles in this work could not be placed on the same spawn point simultaneously and also positions, not included on the image plane, are not examined. Furthermore, depending on the waypoint there could be several directions for the vehicle, which also has impact on the volume of the blind zone caused by the larger vehicle. 
 
