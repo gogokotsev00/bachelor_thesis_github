@@ -119,7 +119,7 @@ After we are done with the described calculations, we check if the occluder's ID
     \label{fig:heatmap_target}
 \end{figure}
  
-\subsection{Occlusion degree and metrics}
+\subsection{Occlusion degree and metrics} \label{subsec:metrics}
 Our main criterion for an efficient position of a camera is when a low occlusion degree is estimated in the examined positions. Because we simulate each situation for our pair of vehicles, we receive multiple values for a single target location, therefore we take the average occlusion of all rows where this spawn point is to be found (see equation \ref{eq:avg_occl}). There is also the possibility to exclude the cases where no occlusion occurred and then to present the average occlusion degree, which will lead to higher values. 
 
 \begin{equation}
