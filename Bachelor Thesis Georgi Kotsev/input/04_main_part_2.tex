@@ -126,11 +126,12 @@ After we are done with the described calculations, we check if the occluder's ID
 \end{figure}
  
 \subsection{Occlusion degree and metrics} \label{subsec:metrics}
-Our main criterion for an efficient position of a camera is when a low occlusion degree is estimated in the examined positions. During the simulation of occlusion-prone situations for our pair of vehicles, we can receive multiple values for a single target location, therefore we take the highest occlusion value for each point when generating the heatmap. For a comparison, we also provide a heatmap that contains the average occlusion from all values found in the text file for each single spawn point (see equation \ref{eq:avg_occl}). However, we do not consider the lack of occlusion when calculating the average occlusion.  
+Our main criterion for an efficient position of a camera is when a low occlusion degree is estimated in the examined positions. During the simulation of occlusion-prone situations for our pair of vehicles, we can receive multiple values for a single target location, therefore we take the highest occlusion value for each point when generating a heatmap. 
+% As a comparison, we also provide a heatmap that contains the average occlusion from all values found in the text file for each single spawn point (see equation \ref{eq:avg_occl}). However, we do not consider the lack of occlusion when calculating the average occlusion.  
 
-\begin{equation}
-    \textrm{avg\_occlusion\_degree} = \textrm{sum\_of\_occlusion\_for\_current\_location} / \textrm{location\_occurences}\label{eq:avg_occl}
-\end{equation}
+% \begin{equation}
+%     \textrm{avg\_occlusion\_degree} = \textrm{sum\_of\_occlusion\_for\_current\_location} / \textrm{location\_occurences}\label{eq:avg_occl}
+% \end{equation}
 
 When we calculate the occlusion degree, we set the value in a 2D array on the position $\textrm{array}[y,x]$. The reason for changing the order of coordinates is that the Python data visualisation library Seaborn\footnote{\url{https://seaborn.pydata.org/}, visited on 04/12/2022} we use is based on Matplotlib\footnote{\url{https://matplotlib.org/}, visited on 04/12/2022}, which reads first the y-dimension of the array and then the x-dimension, e.g., if we have an occlusion 40\% for the location $(x=12,y=5)$, then we have to request the element on position $(5,12)$ from the array. When everything is set correctly in the array, we plot the result using the "YlGnBu" (yellow-green-blue) colour palette, which displays the low values using light yellow colour and dark blue colour for the higher ones. We can see in Figure \ref{fig:heatmap_target} how the results for each target location at 6 m distance from each other are presented when there is a full occlusion everywhere. 
 
