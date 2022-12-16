@@ -55,7 +55,7 @@ For the purpose of assessing the optimal camera locations we apply our M1 metric
 \section{Results}\label{results}
 In the heatmaps and tables below, we can inspect the results from both experiments. In order to maintain a well-arranged visualisation of the output, we are going to present only the heatmaps for 5 and 10-meter height and compare the impact of increasing elevation on the maximum occlusions. For our second experiment, we will visualise the results from cameras placed at 8 meters above the road. The other heatmaps are placed in the appendix, if one wants to analyse them.
 
-\subsection{First experiment}
+\subsection{First experiment} \label{subsec:first_exp_heat}
 
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
@@ -68,7 +68,8 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\newpage
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position1/pos1_5m.svg}
   \caption{Pos.2 at 5 m height}\label{fig:pos2_5m}
@@ -79,7 +80,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position2/pos2_5m.svg}
   \caption{Pos.3 at 5 m height}\label{fig:pos3_5m}
@@ -90,7 +91,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position3/pos3_5m.svg}
   \caption{Pos.4 at 5 m height}\label{fig:pos4_5m}
@@ -101,7 +102,8 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\newpage
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position4/pos4_5m.svg}
   \caption{Pos.5 at 5 m height}\label{fig:pos5_5m}
@@ -112,7 +114,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position5/pos5_5m.svg}
   \caption{Pos.6 at 5 m height}\label{fig:pos6_5m}
@@ -123,7 +125,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{figure}[!htb]
+\begin{figure}[!ht]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position6/pos6_5m.svg}
   \caption{Pos.7 at 5 m height}\label{fig:pos7_5m}
@@ -134,6 +136,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
+\newpage
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position7/pos7_5m.svg}
@@ -145,7 +148,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-\begin{table}[h]
+\begin{table}[!h]
 \caption{This table presents the M2 score of each camera position at different height level \label{tab:height_experiment}}
 \centering
     \begin{tabular}{ | c | c | c | c | c | c | c | c | c |}
@@ -174,7 +177,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-
+\newpage
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/sprinter_ambulance/ambulance_sprinter_pos0.svg}
@@ -185,7 +188,6 @@ In the heatmaps and tables below, we can inspect the results from both experimen
   \caption{Pos.3 Seat and Jeep}\label{fig:pos3_8m}
 \endminipage\hfill
 \end{figure}
-
 
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
@@ -198,7 +200,6 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
   \includesvg[width=\linewidth]{images/position5/pos5_8m.svg}
@@ -210,6 +211,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
+\newpage
 \begin{figure}[!htb]
 \minipage{0.5\textwidth}
     \includesvg[width=\linewidth]{images/sprinter_ambulance/ambulance_sprinter_pos5.svg}
@@ -217,8 +219,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 \endminipage\hfill
 \end{figure}
 
-
-\begin{table}[h]
+\begin{table}[!htb]
 \caption{This table presents the M1 score at 8 m height for a specified threshold and vehicles Seat Leon and Jeep Wrangler Rubicon\label{tab:jeep_seat_threshold}}
 \centering
     \begin{tabular}{ | c | c | c | c | c | c | c |}
@@ -230,7 +231,8 @@ In the heatmaps and tables below, we can inspect the results from both experimen
     \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\newpage
+\begin{table}[!htb]
 \caption{This table presents the M1 score at 8 m height for a specified threshold and vehicles Ford Mustang and Mercedes Sprinter\label{tab:ford_merc_threshold}}
 \centering
     \begin{tabular}{ | c | c | c | c | c | c | c |}
@@ -242,7 +244,7 @@ In the heatmaps and tables below, we can inspect the results from both experimen
     \end{tabular}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[!htb]
 \caption{This table presents the M1 score at 8 m height for a specified threshold and vehicles Ambulance Truck and Mercedes Sprinter\label{tab:amb_merc_threshold}}
 \centering
     \begin{tabular}{ | c | c | c | c | c | c | c |}
@@ -259,6 +261,10 @@ In the heatmaps and tables below, we can inspect the results from both experimen
 %###################################################################################
 \newpage
 \section{Discussions}\label{discussions}
+In this section we are going to analyse the above displayed heatmaps and tables in order to compare camera's performance in various situations and decide which positions brought the most optimal results. Furthermore, we also discuss which height levels were beneficial the efficiency of our visual sensor.
+
 \subsection{Results of first experiment}
+To start with, if we examine the heatmaps from Subsection \ref{subsec:first_exp_heat} and Table \ref{tab:height_experiment}, then we can assert that height is actually of utmost importance for the quantity of detected occlusions. For instance, in Figure \ref{fig:pos1_5m} and Figure \ref{fig:pos1_10m} it is noticeable that the difference of 5 meters significantly decreases the degree of occlusion for each target's spawn location. We are also able to see that our tilt angle is set correctly according to the height and ensures that the same spawn positions remain visible for the camera and new ones also appear at 10 meters.
+
 \subsection{Results of second experiment}
 \subsection{Efficiency of metrics}
