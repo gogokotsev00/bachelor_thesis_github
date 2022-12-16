@@ -18,14 +18,14 @@ The following list contains technical specifications of the machine, which all e
 
 \newpage
 \subsection{First experiment - change height and angle of camera}
-The main objective of our first experiment is to evaluate the performance of cameras at different height, because we concluded in Chapter \ref{problem_analysis} that in the found literature there is little information about which height is optimal for traffic surveillance. During the execution of simulations, we rely on a camera with the following configurations:
+The main objective of our first experiment is to evaluate the performance of cameras at different height, because we concluded in Chapter \ref{problem_analysis} that in the found literature there is little information about which height is optimal for traffic surveillance. We use heatmaps to present the highest occlusion degree for each spawn point. Additionally, our metric M2 is applied in order to see what part occlusion situations were from all cases and choose positions which has scored lower values. During the execution of simulations, we rely on a camera with the following configurations:
 \begin{itemize}
     \item FoV (horizontal angle) = $80^{\circ}$
     \item Resolution = $1280\times720$ pixels or also known as 720p
 \end{itemize}
-The reason for our horizontal angle is that we wanted to cover as much as possible from our region of interest and an average traffic surveillance camera on the market has a horizontal field of view $70^{\circ} - 110^{\circ}$. In a real-world scenario, a wider field of view will cause a fisheye effect\footnote{When an image is distorted by stretching the picture around a rounded camera lens} to occur and has to be taken into account. However, in our experiments the conditions are ideal and we do not apply image distortion. We have 8 enumerated positions for the camera, which can be seen in Figure \ref{fig:positions_enumerated}, where we place it at a pre-defined height. On each of these spawn locations for our sensor, we define 6 levels for the height beginning at 5 meters and going to 10 meters with a 1-meter step. This results in 48 simulations, where we set $0^{\circ}$ for the tilt angle at 5 meters, $-10^{\circ}$ at 6 meters and then go to $-30^{\circ}$ at 10 meters with a $-5^{\circ}$ step. In this way we guarantee that the camera has approximately the same sight over the vehicles. The region of interest is limited by the red lines in Figure \ref{fig:positions_enumerated} and is used in each of the two experiments.
+The reason for our horizontal angle is that we wanted to cover as much as possible from our region of interest and an average traffic surveillance camera on the market has a horizontal field of view $70^{\circ} - 110^{\circ}$. In a real-world scenario, a wider field of view will cause a fisheye effect\footnote{When an image is distorted by stretching the picture around a rounded camera lens} to occur and has to be taken into account. However, in our experiments the conditions are ideal and we do not apply image distortion. We have 8 enumerated positions for the camera, which can be seen in Figure \ref{fig:positions_enumerated}, where we place it at a pre-defined height. On each of these spawn locations for our sensor, we define 6 levels for the height beginning at 5 meters and going to 10 meters with a 1-meter step. This results in 48 simulations, where we set $0^{\circ}$ for the tilt angle at 5 meters, $-10^{\circ}$ at 6 meters and then go to $-30^{\circ}$ at 10 meters with a $-5^{\circ}$ step. In this way we guarantee that the camera has approximately the same sight over the vehicles and the blind spot under the sensor does not increase. The region of interest is limited by the red lines in Figure \ref{fig:positions_enumerated} and is used in each of the two experiments.
 
-During each simulation, we generate a list with waypoints for the target vehicle that are 3 meters apart and one for the occluder, but with 1-meter distance between spawn points. We decided to use Seat Leon as a target and Jeep Wrangler Rubicon as an occluder for our scenarios, because in an urban area people mainly use normal cars or SUVs for their transportation needs, and therefore it is more often the case that an occlusion-prone situation between these two types of vehicles arises. In our second experiment we consider pairs of vehicles of different type in order to broaden the variety of occlusions.
+During each simulation, we generate a list with waypoints for the target vehicle that are 3 meters apart and one for the occluder, but with 1-meter distance between spawn points. We decided to use Seat Leon (see Fig. \ref{fig:seat_leon}) as a target and Jeep Wrangler Rubicon (see Fig. \ref{fig:jeep_wrangler}) as an occluder for our scenarios, because in an urban area people mainly use normal cars or SUVs for their transportation needs, and therefore it is more often the case that an occlusion-prone situation between these two types of vehicles arises. In our second experiment we consider pairs of vehicles of different type in order to broaden the variety of occlusions.
 
 \begin{figure} [h!]
     \centering
@@ -34,12 +34,26 @@ During each simulation, we generate a list with waypoints for the target vehicle
     \label{fig:positions_enumerated}
 \end{figure}
 
+\newpage
 \subsection{Second experiment - change threshold for target vehicle recognition}
+In our second experiment our goal is to observe how strong the occlusion is when there are different types of vehicles. Here we use the same parameters for the camera, but this time it is placed only at 8 meters above the ground. The reason behind this decision is that this value is approximately in the middle between the range of values we used in the previous experiment, and also we have mentioned in Section \ref{main_problems} that the minimum for an ideal height is exactly 8 meters. Furthermore, we guarantee same conditions for all sensor positions by setting their tilt angle at $-20^{\circ}$ in order to have an accurate comparison between each one of them. For this scenario, we use three pairs of vehicles and execute a simulation for each camera position, which comprises a total of 18 simulations, 6 of which are also part of the first experiment.
+
+For this experiment we rely on the pairs:
+\begin{itemize}
+    \item Seat Leon and Jeep Wrangler Rubicon
+    \item Ford Mustang and Mercedes Sprinter (see Figures \ref{fig:ford_mustang} and \ref{fig:mercedes_sprinter})
+    \item Ambulance truck (see Fig. \ref{fig:ambulance}) and Mercedes Sprinter
+\end{itemize}
+Our idea is to reproduce three possible scenarios in a traffic, in which we have a normal car and SUV, a normal car and a large van, as well as two large-sized vehicles. In this way, we can ensure that a variety of vehicles' sizes are covered by this study. Important to mention is that the distance between target spawn points is again set to 3 meters. 
+
+For the purpose of assessing the optimal camera locations we apply our M1 metric for a priori specified threshold. In the real world it is vital for a camera to miss as little as possible objects, which were hidden due to other large-sized vehicles. Therefore, we set an occlusion tolerance threshold, after which the target vehicle is no more detectable, to 50\%, 75\% and 90\%. By implementing this constraint, we can conclude from the score of our metric how many occlusions from all the detected ones could actually blind the camera. Finally, we choose these positions, which output the lowest values. Apart from the metric, heatmaps display again the maximum occlusion degree for each target position, which was visible for the sensor.
+
 
 %###################################################################################
 %###################### Results             ########################################
 %###################################################################################
 \section{Results}\label{results}
+In the heatmaps and tables below, we can inspect the results from both experiments. In order to maintain a well-arranged visualisation of the output, we are going to present only the heatmaps for 5, 8 and 10-meter height and compare the impact of increasing elevation on the maximum occlusions. The other heatmaps are placed in the appendix, if one wants to analyse them. 
 
 %###################################################################################
 %###################### Discussions         ########################################
