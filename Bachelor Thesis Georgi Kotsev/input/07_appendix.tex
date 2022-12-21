@@ -38,6 +38,9 @@ Here is the link to my GitLab repository, where the Python scripts used for impl
 \addcontentsline{toc}{section}{Appendix C: Images of town and vehicles}
 \section*{Appendix C: Images of town and vehicles}
 In this section we present pictures of the town and vehicles with their bounding boxes to get a visual idea of the environment and its actors that participated in our simulations. The lightbulbs and projectors are shown because images were made in editor mode, but have nothing to do with the thesis.
+
+\begin{document}
+
 \begin{figure} [h!]
     \centering
     \includegraphics[width=\textwidth]{images/experiment_city.png}
@@ -48,35 +51,23 @@ In this section we present pictures of the town and vehicles with their bounding
 \newpage
 \begin{figure} [h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/mercedes_sprinter.png}
-    \caption[Mercedes Sprinter]{Mercedes Sprinter}
-    \label{fig:mercedes_sprinter}
+    \subfloat[Mercedes Sprinter]{\includegraphics[width=0.4\linewidth]{images/mercedes_sprinter.png}\label{fig:mercedes_sprinter}}
+    \hfill
+    \subfloat[Seat Leon]{\includegraphics[width=0.4\linewidth]{images/seat_leon.png}\label{fig:seat_leon}}
+    \caption{Test vehicles part 1}
 \end{figure}
 
 \begin{figure} [h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/seat_leon.png}
-    \caption[Seat Leon]{Seat Leon}
-    \label{fig:seat_leon}
+    \subfloat[Ambulance]{\includegraphics[width=0.4\textwidth]{images/ambulance.png}\label{fig:ambulance}}
+    \hfill
+    \subfloat[Jeep Wrangler Rubicon]{\includegraphics[width=0.4\textwidth]{images/jeep_wrangler_rubicon.png}\label{fig:jeep_wrangler}}
+    \caption{Test vehicles part 2}
 \end{figure}
 
 \begin{figure} [h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{images/ambulance.png}
-    \caption[Ambulance]{Ambulance}
-    \label{fig:ambulance}
-\end{figure}
-
-\begin{figure} [h!]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/jeep_wrangler_rubicon.png}
-    \caption[Jeep Wrangler Rubicon]{Jeep Wrangler Rubicon}
-    \label{fig:jeep_wrangler}
-\end{figure}
-
-\begin{figure} [h!]
-    \centering
-    \includegraphics[width=0.5\textwidth]{images/ford_mustang.png}
+    \includegraphics[width=0.4\textwidth]{images/ford_mustang.png}
     \caption[Ford Mustang]{Ford Mustang}
     \label{fig:ford_mustang}
 \end{figure}
@@ -272,6 +263,7 @@ Here we display the rest of our heatmaps, which can be used to get a clear idea 
 \endminipage\hfill
 \end{figure}
 
+\end{document}
 % \newpage
 % %change this
 % \addcontentsline{toc}{section}{Appendix C: {\LaTeX} Help}
